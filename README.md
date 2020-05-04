@@ -1,1 +1,4 @@
-# kaigara
+kaigara
+=======
+
+small shell student exercice.
