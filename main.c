@@ -70,13 +70,15 @@ int main(int argc, char const *argv[]) {
 	return 0;
 }
 
-char** read_line() {
+char** read_line() { //written by our professor, will implement later
     int i = 0;
     int s;
+
     do {
         s = read(0, buf+i, 1);
         i += s;
     } while (i < LBUF-1  &&  s > 0  &&  buf[i-1] != '\n');
+
     if (s < 0) 
         perror("erreur de lecture dans lis_ligne");
     if (i == 0) 
@@ -91,6 +93,7 @@ char** read_line() {
         i += 1;
         ligne[i] = strtok_r(NULL, " \t\n\r", &tok);
     }
-    if (i == LLIGNE-2) ligne[LLIGNE-1] = NULL;
+    if (i == LLIGNE-2) 
+    	ligne[LLIGNE-1] = NULL;
     return ligne;
 }
