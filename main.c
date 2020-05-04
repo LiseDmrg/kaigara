@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <string.h>
+#include "./built-in.c"
 
 int main(int argc, char const *argv[]) {
 	char **args;
@@ -32,7 +33,6 @@ int main(int argc, char const *argv[]) {
 
 		if (!empty_line(args)) {
 
-			
 			pid = fork();
 			//printf("%d\n", pid);
 			if (pid == 0) { // if child process
