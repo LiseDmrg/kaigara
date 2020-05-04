@@ -37,7 +37,9 @@ void my_export(char** args) {
 		perror("error while export");
 	}
 }
-
+/*
+	split string VARIABLE=value in two strings by replacing '=' by '\0'
+*/
 char* split_assignation(char* str) {
 	char* separator = str;
 	while(*separator) {
@@ -48,4 +50,18 @@ char* split_assignation(char* str) {
 		separator++;
 	}
 	return NULL;
+}
+
+// help command function 
+
+void my_help() {
+	printf("This is a small shell program\nAuthor: Lise Demourgues\n");
+	printf("I tried to implement built-in command, the followings are available:\n");
+
+	for (int i = 0; i < (sizeof(built_in_command) / sizeof(char *)); i++) {
+    	printf(" %s\n", built_in_command[i]);
+  	}
+
+	printf("for other programms use man or cmd --help\n");
+	printf("To customise the prompt, set the env-variable called MYPROMPT\n");
 }
