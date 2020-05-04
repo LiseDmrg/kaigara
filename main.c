@@ -11,6 +11,13 @@
 #include <string.h>
 #include "./built-in.c"
 
+#define LBUF 1024
+#define LLIGNE 256
+static char buf[LBUF];
+static char* ligne[LLIGNE];
+
+char** read_line();
+
 int main(int argc, char const *argv[]) {
 	char **args;
 	int proceed = 1;
@@ -28,15 +35,15 @@ int main(int argc, char const *argv[]) {
 
 		args = read_line();
 
-		if (end_of_file(args)) {
+		if (args == NULL) {
 			proceed = 0;
 			printf("\n");
 			//exit(-1);
 		}
 
-		if (!empty_line(args)) {
+		if (!(args[0] == NULL)) {
 
-			if (!internal_cmd(args)) {
+			if (internal_cmd(args) == 0) {
 
 				pid = fork();
 				//printf("%d\n", pid);
@@ -61,4 +68,29 @@ int main(int argc, char const *argv[]) {
 
 	free(args);
 	return 0;
+}
+
+char** read_line() {
+    int i = 0;
+    int s;
+    do {
+        s = read(0, buf+i, 1);
+        i += s;
+    } while (i < LBUF-1  &&  s > 0  &&  buf[i-1] != '\n');
+    if (s < 0) 
+        perror("erreur de lecture dans lis_ligne");
+    if (i == 0) 
+        return NULL;
+
+    // cut with space
+    char* tok;
+    buf[i] = '\0';
+    i = 0;
+    ligne[0] = strtok_r(buf, " \t\n\r", &tok);
+    while (ligne[i] && i < LLIGNE-1) {
+        i += 1;
+        ligne[i] = strtok_r(NULL, " \t\n\r", &tok);
+    }
+    if (i == LLIGNE-2) ligne[LLIGNE-1] = NULL;
+    return ligne;
 }
