@@ -1,3 +1,8 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 char* split_assignation(char* str);
 
 // list of built-in commands
@@ -7,16 +12,6 @@ char *built_in_command[] = {
 	"export",
 	"exit",
 	"echo"
-};
-
-// list of built-in commands code
-
-int (*built_in_command_body[]) (char **) = {
-	&my_cd,
-	&my_help,
-	&my_export,
-	&my_exit,
-	&my_echo
 };
 
 /*
@@ -49,7 +44,7 @@ int my_export(char** args) {
 char* split_assignation(char* str) {
 	char* separator = str;
 	while(*separator) {
-		if (separator == "=") {
+		if (strncmp(separator,"=", sizeof(*separator)) == 0) {
 			*separator = '\0';
 			return separator+1;
 		}
@@ -85,6 +80,16 @@ int my_echo(char** args) {
 	return 1; 
 }
 
+// list of built-in commands code
+
+int (*built_in_command_body[]) (char **) = {
+	&my_cd,
+	&my_help,
+	&my_export,
+	&my_exit,
+	&my_echo
+};
+
 /*
 	test if its an internal command 
 */
@@ -94,4 +99,5 @@ int internal_cmd(char** args) {
     	if (strcmp(args[0], built_in_command[i]) == 0)
       		return (*built_in_command_body[i])(args);
   	}
+  	return 0;
 }
