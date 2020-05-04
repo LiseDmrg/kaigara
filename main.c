@@ -20,7 +20,10 @@ int main(int argc, char const *argv[]) {
 
 	while(proceed) {
 
-		printf("\033[0;36m%s\033[0m\033[0;35m%s\033[0m %%", getenv("USER"), getenv("PWD"));
+		if (getenv("MYPROMPT") == NULL)
+			printf("\033[0;36m%s\033[0m\033[0;35m%s\033[0m %%", getenv("USER"), getenv("PWD"));
+		else
+			printf("\033[0;36m%s\033[0m %%", getenv("MYPROMPT"));
 		fflush(stdout);
 
 		args = read_line();
@@ -33,22 +36,24 @@ int main(int argc, char const *argv[]) {
 
 		if (!empty_line(args)) {
 
-			pid = fork();
-			//printf("%d\n", pid);
-			if (pid == 0) { // if child process
+			if (!internal_cmd(args)) {
 
-				if (execvp(args[0], args) == -1) {
-					perror("error while execvp");
-					exit(EXIT_FAILURE);
+				pid = fork();
+				//printf("%d\n", pid);
+				if (pid == 0) { // if child process
+					if (execvp(args[0], args) == -1) {
+						perror("error while execvp");
+						exit(EXIT_FAILURE);
+					}
 				}
-			}
 
-			//printf("%d\n", pid);
-			if (pid < 0) { // error while fork
-				perror("error while fork");
-			} else if (pid > 0) { 
-				if (wait(&status) < 0) {
-					perror("error while parent was waiting");
+				//printf("%d\n", pid);
+				if (pid < 0) { // error while fork
+					perror("error while fork");
+				} else if (pid > 0) { 
+					if (wait(&status) < 0) {
+						perror("error while parent was waiting");
+					}
 				}
 			}
 		}
