@@ -38,9 +38,8 @@ int my_export(char** args) {
 	}
 	return 1; 
 }
-/*
-	split string VARIABLE=value in two strings by replacing '=' by '\0'
-*/
+
+// split string VARIABLE=value in two strings by replacing '=' by '\0'
 char* split_assignation(char* str) {
 	char* separator = str;
 	while(*separator) {
@@ -90,9 +89,7 @@ int (*built_in_command_body[]) (char **) = {
 	&my_echo
 };
 
-/*
-	test if its an internal command 
-*/
+//	test if its an internal command 
 
 int internal_cmd(char** args) {
 	for (int i = 0; i < (sizeof(built_in_command) / sizeof(char *)); i++) {

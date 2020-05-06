@@ -24,24 +24,26 @@ int main(int argc, char const *argv[]) {
 
 	pid_t pid;
 	int status;
+	char cwd[LBUF];
 
 	while(proceed) {
-
+		//display default prompt
 		if (getenv("MYPROMPT") == NULL)
-			printf("\033[0;36m%s\033[0m\033[0;35m%s\033[0m %%", getenv("USER"), getenv("PWD"));
-		else
-			printf("\033[0;36m%s\033[0m %%", getenv("MYPROMPT"));
+			printf("\033[0;36m%s \033[0m\033[0;35m%s\033[0m %% ", getenv("USER"), getcwd(cwd, sizeof(cwd)));
+		else //display custom prompt
+			printf("\033[0;36m%s\033[0m %% ", getenv("MYPROMPT"));
 		fflush(stdout);
 
+		//get the command entered by user
 		args = read_line();
 
-		if (args == NULL) {
+		if (args == NULL) { //'\n' 
 			proceed = 0;
 			printf("\n");
 			//exit(-1);
 		}
 
-		if (!(args[0] == NULL)) {
+		if (!(args[0] == NULL)) { //
 
 			if (internal_cmd(args) == 0) {
 
@@ -70,7 +72,7 @@ int main(int argc, char const *argv[]) {
 	return 0;
 }
 
-char** read_line() { //written by our professor, will implement later
+char** read_line() { //TODO : implement later
     int i = 0;
     int s;
 
